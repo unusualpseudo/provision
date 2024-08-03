@@ -1,5 +1,7 @@
 ---
 ansible:
-  - "ansible/**/*"
+  - changed-files:
+      - any-glob-to-any-file: "ansible/**/*"
 github-actions:
-  - ".github/**/*"
+  - changed-files:
+      - any-glob-to-any-file: ".github/**/*"
