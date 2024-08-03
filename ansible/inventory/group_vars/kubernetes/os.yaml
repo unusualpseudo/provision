@@ -21,6 +21,7 @@ apt_install_packages:
   - unzip
   - arptables
   - lvm2
+  - nfs-common
   - open-iscsi
   - software-properties-common
   - unzip

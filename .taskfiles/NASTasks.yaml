@@ -1,0 +1,20 @@
+---
+version: "3"
+
+vars:
+  ANSIBLE_PLAYBOOK_DIR: "{{.ANSIBLE_DIR}}/playbooks"
+
+tasks:
+
+  setup:
+    desc: Setup NAS
+    dir: "{{.ANSIBLE_PLAYBOOK_DIR}}"
+    cmds:
+      - ansible-playbook nas-setup.yaml
+
+
+  nuke:
+    desc: Nuke NAS
+    dir: "{{.ANSIBLE_PLAYBOOK_DIR}}"
+    cmds:
+      - ansible-playbook nas-nuke.yaml

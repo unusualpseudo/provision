@@ -1,0 +1,74 @@
+---
+- name: Setup NAS
+  hosts: apex
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+
+  pre_tasks:
+    - name: Install required packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items: "{{ nas_apt_install_packages }}"
+
+    - name: Check if disk device is available
+      stat:
+        path: "{{ disk_device }}"
+      register: disk_stat
+
+    - name: Fail if disk device is not available
+      fail:
+        msg: "The specified disk device {{ disk_device }} does not exist."
+      when: not disk_stat.stat.exists
+
+    - name: Check if ZFS pool already exists
+      command: zpool list {{ pool_name }}
+      register: zpool_check
+      failed_when: false
+      changed_when: false
+
+    - name: Fail if ZFS pool already exists
+      fail:
+        msg: "The ZFS pool {{ pool_name }} already exists."
+      when: zpool_check.rc == 0
+
+
+  tasks:
+    - name: Create ZFS pool
+      shell: "zpool create -o ashift=12 -f {{ pool_name }} {{ disk_device }}"
+
+    - name: Set ZFS property atime
+      shell: "zfs set atime=off {{ pool_name }}"
+
+    - name: Set ZFS property compression
+      shell: "zfs set compression=lz4 {{ pool_name }}"
+
+    - name: Create ZFS datasets
+      shell: "zfs create {{ dataset.name }}"
+      loop: "{{ datasets }}"
+      loop_control:
+        loop_var: dataset
+
+    - name: Set NFS share properties for datasets
+      shell: "zfs set sharenfs={{ nfs_options }} {{ dataset.name }}"
+      loop: "{{ datasets }}"
+      loop_control:
+        loop_var: dataset
+
+    - name: Change ownership and permissions
+      shell: |
+        chown {{ uid }}:{{ gid }} -R /{{ dataset.name }}
+        chmod 777 -R /{{ dataset.name }}
+      loop: "{{ datasets }}"
+      loop_control:
+        loop_var: dataset
+
+  post_tasks:
+    - name: Check ZFS pool status
+      shell: "zpool status"
+      register: zpool_status
+
+    - name: Show ZFS pool status
+      debug:
+        msg: "{{ zpool_status.stdout }}"

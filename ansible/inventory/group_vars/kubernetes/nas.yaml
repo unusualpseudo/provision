@@ -1,0 +1,20 @@
+---
+disk_device: "/dev/sda"
+pool_name: "nas"
+datasets:
+  - name: "nas/Apps"
+  - name: "nas/Apps/Longhorn"
+  - name: "nas/Apps/Media"
+
+nfs_options: "no_subtree_check,all_squash,anonuid=1000,anongid=1000,rw=@192.168.1.0/24"
+uid: 1000
+gid: 1000
+
+
+nas_apt_install_packages:
+  - zfs-zed
+  - zfsutils-linux
+  - nfs-kernel-server
+  - nfs-common
+  - open-iscsi
+  - smartmontools

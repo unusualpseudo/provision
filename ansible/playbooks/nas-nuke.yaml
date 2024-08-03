@@ -1,0 +1,40 @@
+---
+- name: Setup NAS
+  hosts: apex
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+
+  tasks:
+    - name: Check if ZFS pool exists
+      command: zpool list -H -o name {{ pool_name }}
+      register: zpool_check
+      failed_when: false
+      changed_when: false
+
+    - name: Debug if ZFS pool exists
+      debug:
+        msg: "The ZFS pool {{ pool_name }} does not exist."
+      when: zpool_check.rc != 0
+
+    - meta: end_play
+      when: zpool_check.rc != 0
+
+    - name: Destroy ZFS pool and all datasets
+      command: zpool destroy -f {{ pool_name }}
+      when: zpool_check.rc == 0
+      register: destroy_result
+
+    - name: Notify if ZFS pool was destroyed
+      debug:
+        msg: "The ZFS pool {{ pool_name }} has been destroyed."
+      when: destroy_result is success
+
+  post_tasks:
+    - name: Show ZFS pool status after cleanup
+      shell: zpool status
+      register: zpool_status
+
+    - name: Show ZFS pool status
+      debug:
+        msg: "{{ zpool_status.stdout }}"

@@ -13,6 +13,8 @@ includes:
   sops: ./.taskfiles/SopsTasks.yaml
   pre-commit: ./.taskfiles/PrecommitTasks.yaml
   os: ./.taskfiles/OSTasks.yaml
+  nas: ./.taskfiles/NASTasks.yaml
+
 tasks:
   ansible-init:
     desc: Install/Upgrade Ansible galaxy dependencies
