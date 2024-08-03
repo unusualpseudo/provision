@@ -13,7 +13,6 @@
     "github>unusualpseudo/nexus//.github/renovate/semanticCommits.json",
     "github>unusualpseudo/nexus//.github/renovate/commitMessage.json"
   ],
-  "platform": "github",
   "commitBodyTable": true,
   "recreateClosed": true,
   "timezone": "Europe/Paris",
