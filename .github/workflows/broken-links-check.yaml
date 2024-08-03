@@ -51,7 +51,7 @@ jobs:
             broken-links
 
       - name: Update issues
-        uses: peter-evans/create-issue-from-file@v4
+        uses: peter-evans/create-issue-from-file@v5
         with:
           title: Broken links detected 🔗
           issue-number: "${{ steps.broken-link-check-issue.outputs.issue-number }}"
