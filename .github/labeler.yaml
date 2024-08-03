@@ -1,0 +1,5 @@
+---
+ansible:
+  - "ansible/**/*"
+github-actions:
+  - ".github/**/*"

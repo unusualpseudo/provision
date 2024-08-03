@@ -1,0 +1,14 @@
+---
+kubernetes:
+  children:
+    controller:
+      hosts:
+        horizon:
+          ansible_host: 192.168.1.51
+    worker:
+      hosts:
+        apex:
+          ansible_host: 192.168.1.49
+        rift:
+          ansible_host: 192.168.1.50
+

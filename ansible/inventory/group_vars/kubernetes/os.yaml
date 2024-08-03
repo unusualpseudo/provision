@@ -1,0 +1,42 @@
+---
+# To copy ssh keys from github
+github_username: unusualpseudo
+
+apt_install_packages:
+  - vim
+  - curl
+  - wget
+  - nano
+  - apt-transport-https
+  - ca-certificates
+  - software-properties-common
+  - python3-pip
+  - python3-setuptools
+  - python3-kubernetes
+  - python3-yaml
+  - net-tools
+  - gdisk
+  - fdisk
+  - htop
+  - unzip
+  - arptables
+  - lvm2
+  - open-iscsi
+  - software-properties-common
+  - unzip
+
+
+apt_remove_packages:
+  - ufw
+  - unattended-upgrades
+  - apparmor
+
+timezone: "Europe/Paris"
+# Add cloudflare ntp server
+ntp_servers:
+  primary:
+    - "time.cloudflare.com"
+  fallback:
+    - "0.us.pool.ntp.org"
+    - "1.us.pool.ntp.org"
+    - "2.us.pool.ntp.org"

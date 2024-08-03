@@ -1,0 +1,30 @@
+---
+- name: System Packages | Upgrade all system packages
+  ansible.builtin.apt:
+    upgrade: full
+    update_cache: true
+    cache_valid_time: 3600
+    autoclean: true
+    autoremove: true
+  register: apt_upgrade
+  retries: 5
+  until: apt_upgrade is success
+
+- name: System Packages | Install apt packages list
+  ansible.builtin.package:
+    name: "{{ apt_install_packages }}"
+    state: latest
+    update_cache: true
+
+- name: System Packages | Remove packages
+  block:
+    - name: System Packages | Remove packages
+      ansible.builtin.apt:
+        name: "{{ apt_remove_packages }}"
+        state: absent
+        autoremove: true
+        autoclean: true
+  when:
+    - apt_remove_packages is defined
+    - apt_remove_packages is iterable
+    - apt_remove_packages | length > 0

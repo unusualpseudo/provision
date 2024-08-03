@@ -1,0 +1,67 @@
+---
+- name: Manage ZFS pool and datasets
+  hosts: all
+  become: yes
+  vars:
+    disk_device: "/dev/sda"
+    pool_name: "nas"
+    datasets:
+      - name: "nas/Apps"
+      - name: "nas/Apps/Longhorn"
+      - name: "nas/Apps/Media"
+    nfs_options: "no_subtree_check,all_squash,anonuid=1000,anongid=1000,rw=@192.168.1.0/24"
+    uid: 1000
+    gid: 1000
+
+  tasks:
+    - name: Check disk sector size
+      command: fdisk -l {{ disk_device }}
+      register: fdisk_output
+
+    - name: Show sector size
+      debug:
+        msg: "{{ fdisk_output.stdout_lines | select('search', 'Sector size') | list }}"
+
+    - name: Create ZFS pool
+      shell: "zpool create -o ashift=12 -f {{ pool_name }} {{ disk_device }}"
+      args:
+        warn: false
+
+    - name: Set ZFS property atime
+      shell: "zfs set atime=off {{ pool_name }}"
+      args:
+        warn: false
+
+    - name: Set ZFS property compression
+      shell: "zfs set compression=lz4 {{ pool_name }}"
+      args:
+        warn: false
+
+    - name: Create ZFS datasets
+      shell: "zfs create {{ item.name }}"
+      loop: "{{ datasets }}"
+      args:
+        warn: false
+
+    - name: Set NFS share properties for datasets
+      shell: "zfs set sharenfs={{ nfs_options }} {{ item.name }}"
+      loop: "{{ datasets }}"
+      when: item.name != "nas/Apps"
+      args:
+        warn: false
+
+    - name: Change ownership and permissions
+      shell: |
+        chown {{ uid }}:{{ gid }} -R /{{ item.name }}
+        chmod 777 -R /{{ item.name }}
+      loop: "{{ datasets }}"
+      args:
+        warn: false
+
+    - name: Check ZFS pool status
+      shell: "zpool status"
+      register: zpool_status
+
+    - name: Show ZFS pool status
+      debug:
+        msg: "{{ zpool_status.stdout }}"

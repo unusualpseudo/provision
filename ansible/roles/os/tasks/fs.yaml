@@ -1,0 +1,35 @@
+---
+- name: File System | Disable swap at runtime
+  ansible.builtin.command: swapoff -a
+  when: ansible_swaptotal_mb > 0
+
+- name: File System | Disable swap at boot
+  ansible.posix.mount:
+    name: "{{ item }}"
+    fstype: swap
+    state: absent
+  loop:
+    - swap
+    - none
+
+- name: File System | Disable swap at boot
+  ansible.posix.mount:
+    name: "{{ item }}"
+    fstype: swap
+    state: absent
+  loop: ["none", "swap"]
+
+- name: System Configuration | Sysctl
+  ansible.posix.sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    sysctl_file: /etc/sysctl.d/99-kubernetes.conf
+    reload: true
+  with_dict: "{{ sysctl_config }}"
+  vars:
+    sysctl_config:
+      fs.inotify.max_queued_events: 65536
+      fs.inotify.max_user_watches: 524288
+      fs.inotify.max_user_instances: 8192
+      net.core.rmem_max: 2500000
+      net.core.wmem_max: 2500000

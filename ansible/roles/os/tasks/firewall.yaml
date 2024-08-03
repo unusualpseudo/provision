@@ -1,0 +1,66 @@
+---
+- name: Firewall | Install fail2ban
+  apt:
+    name: fail2ban
+    state: latest
+    update_cache: true
+
+- name: Firewall | Define fail2ban ssh policy
+  copy:
+    src: ../templates/jail.local.j2
+    dest: /etc/fail2ban/jail.local
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Firewall | Populate service facts
+  service_facts:
+
+- name: Firewall | Disable UFW firewall
+  systemd:
+    name: ufw
+    state: stopped
+    enabled: false
+  when: "'ufw' in services"
+
+- name: Firewall | Install iptables && netfilter-persistent && iptables-persistent packages
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - iptables
+    - iptables-persistent
+    - netfilter-persistent
+
+- name: Firewall | Flush existing firewall
+  iptables:
+    flush: true
+
+- name: Firewall |Remove any obsolete scripts used by an old version of the role
+  file: path={{ item }} state=absent
+  with_items:
+    - /etc/network/if-post-down.d/iptables-v4
+    - /etc/network/if-pre-up.d/iptables-v4
+    - /etc/iptables.v4.saved
+
+- name: Firewall | rule to allow all loopback traffic
+  iptables:
+    action: append
+    chain: INPUT
+    in_interface: lo
+    jump: ACCEPT
+
+- name: Firewall | rule to allow established connections
+  iptables:
+    chain: INPUT
+    ctstate: ESTABLISHED,RELATED
+    jump: ACCEPT
+
+- name: Firewall | rule to allow port ping traffic
+  iptables:
+    chain: INPUT
+    jump: ACCEPT
+    protocol: icmp
+
+- name: Firewall | Save rules (netfilter-persistent)
+  command: netfilter-persistent save

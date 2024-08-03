@@ -1,0 +1,64 @@
+---
+- name: SSH | Download GitHub public SSH keys
+  become: true
+  ansible.builtin.get_url:
+    url: "https://github.com/{{ github_username }}.keys"
+    dest: "/home/{{ ansible_user }}/.ssh/authorized_keys"
+    mode: "0600"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  when:
+    - github_username is defined
+
+- name: SSH | Check if cloud-init SSH configuration exits
+  ansible.builtin.stat:
+    path: /etc/ssh/sshd_config.d/50-cloud-init.conf
+  register: file_stat
+
+- name: SSH | Delete cloud-init SSH configuration if exits
+  ansible.builtin.file:
+    path: /etc/ssh/sshd_config.d/50-cloud-init.conf
+    state: absent
+  when: file_stat.stat.exists
+
+- name: SSH | Copy ssh login banner to remote
+  ansible.builtin.copy:
+    src: "ssh_banner.txt"
+    dest: "/etc/ssh/"
+    mode: 0644
+
+- name: SSH | Secure SSH configuration
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    state: present
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - regexp: "^#?PermitRootLogin"
+      line: "PermitRootLogin no"
+    - regexp: "^^#?PasswordAuthentication"
+      line: "PasswordAuthentication no"
+    - regexp: "^#?AllowAgentForwarding"
+      line: "AllowAgentForwarding no"
+    - regexp: "^#?AllowTcpForwarding"
+      line: "AllowTcpForwarding no"
+    - regexp: "^#?MaxAuthTries"
+      line: "MaxAuthTries 2"
+    - regexp: "^#?MaxSessions"
+      line: "MaxSessions 2"
+    - regexp: "^#?TCPKeepAlive"
+      line: "TCPKeepAlive no"
+    - regexp: "^#?UseDNS"
+      line: "UseDNS no"
+    - regexp: "^#?AllowAgentForwarding"
+      line: "AllowAgentForwarding no"
+    - regexp: "^#?AllowUsers"
+      line: "AllowUsers {{ ansible_user }}"
+    - regexp: "^#?Banner"
+      line: "Banner /etc/ssh/ssh_banner.txt"
+
+
+- name: SSH | Remove welcome message
+  file:
+    path: "/home/{{ ansible_user }}/.hushlogin"
+    state: touch

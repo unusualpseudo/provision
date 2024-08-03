@@ -1,0 +1,26 @@
+---
+version: "3"
+
+vars:
+  ANSIBLE_DIR: "{{.ROOT_DIR}}/ansible"
+
+env:
+  ANSIBLE_CONFIG: "{{.ANSIBLE_DIR}}/ansible.cfg"
+
+dotenv: [".envrc"]
+
+includes:
+  sops: ./.taskfiles/SopsTasks.yaml
+  pre-commit: ./.taskfiles/PrecommitTasks.yaml
+  os: ./.taskfiles/OSTasks.yaml
+tasks:
+  ansible-init:
+    desc: Install/Upgrade Ansible galaxy dependencies
+    dir: "{{.ANSIBLE_DIR}}"
+    cmds:
+      - ansible-galaxy collection install -r requirements.yaml --collections-path ~/.ansible/collections --force
+      - ansible-galaxy install -r requirements.yaml --roles-path ~/.ansible/roles --force
+  default:
+    silent: true
+    cmds:
+      - task -l

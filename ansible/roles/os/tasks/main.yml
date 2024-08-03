@@ -1,0 +1,8 @@
+---
+- include_tasks: kernel.yaml
+- include_tasks: fs.yaml
+- import_tasks: network.yaml
+- import_tasks: ntp.yaml
+- import_tasks: firewall.yaml
+- import_tasks: packages.yaml
+- import_tasks: ssh.yaml

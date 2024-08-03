@@ -1,0 +1,34 @@
+---
+
+- name: System Configuration | Create Kernel modules
+  notify: Reboot
+  ansible.builtin.copy:
+    dest: "/etc/modules-load.d/{{ item }}.conf"
+    mode: "0644"
+    content: "{{ item }}"
+  loop:
+    [
+      "br_netfilter",
+      "ip_vs",
+      "ip_vs_rr",
+      "iptable_mangle",
+      "iptable_raw",
+      "nbd",
+      "overlay",
+      "rbd",
+      "xt_socket",
+    ]
+  register: modules_status
+
+- name: System Configuration | Reload Kernel modules
+  when: modules_status.changed
+  ansible.builtin.systemd:
+    name: systemd-modules-load
+    state: restarted
+
+- name: System Configuration | Select default locale
+  debconf:
+    name: locales
+    question: locales/default_environment_locale
+    value: en_US.UTF-8
+    vtype: select

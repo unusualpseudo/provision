@@ -1,0 +1,23 @@
+---
+- name: NTP | Set timezone
+  timezone:
+    name: "{{ timezone | default('Europe/Paris') }}"
+
+- name: NTP | Copy timesyncd config
+  copy:
+    mode: 0644
+    content: |
+      [Time]
+      NTP={{ ntp_servers.primary | default("") | join(" ") }}
+      FallbackNTP={{ ntp_servers.fallback | join(" ") }}
+    dest: /etc/systemd/timesyncd.conf
+  when:
+    - ntp_servers.primary is defined
+    - ntp_servers.primary is iterable
+    - ntp_servers.primary | length > 0
+    - ntp_servers.fallback is defined
+    - ntp_servers.fallback is iterable
+    - ntp_servers.fallback | length > 0
+
+- name: NTP | Enable ntp
+  shell: timedatectl set-ntp true
