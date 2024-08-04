@@ -10,13 +10,13 @@ tasks:
     desc: Prepare k3s hosts
     dir: "{{.ANSIBLE_PLAYBOOK_DIR}}"
     cmds:
-      - ansible-playbook os-setup.yaml
+      - ansible-playbook os/setup.yaml
 
   reboot:
     desc: Reboot all the k3s hosts
     dir: "{{.ANSIBLE_PLAYBOOK_DIR}}"
     cmds:
-      - ansible-playbook reboot.yaml
+      - ansible-playbook os/reboot.yaml
 
   poweroff:
     desc: Shutdown all the k3s hosts
