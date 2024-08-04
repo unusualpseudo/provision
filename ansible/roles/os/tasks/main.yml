@@ -6,3 +6,4 @@
 - import_tasks: firewall.yaml
 - import_tasks: packages.yaml
 - import_tasks: ssh.yaml
+- import_tasks: user.yaml

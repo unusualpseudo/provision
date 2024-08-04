@@ -11,7 +11,7 @@ uid: 1000
 gid: 1000
 
 
-nas_apt_install_packages:
+apt_install_packages:
   - zfs-zed
   - zfsutils-linux
   - nfs-kernel-server

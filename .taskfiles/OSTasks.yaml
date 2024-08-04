@@ -3,7 +3,6 @@ version: "3"
 
 vars:
   ANSIBLE_PLAYBOOK_DIR: "{{.ANSIBLE_DIR}}/playbooks"
-  ANSIBLE_INVENTORY_DIR: "{{.ANSIBLE_DIR}}/inventory"
 
 tasks:
 

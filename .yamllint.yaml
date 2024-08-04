@@ -14,5 +14,5 @@ rules:
     max-spaces-inside: 1
   brackets:
     min-spaces-inside: 0
-    max-spaces-inside: 0
+    max-spaces-inside: 1
   indentation: enable

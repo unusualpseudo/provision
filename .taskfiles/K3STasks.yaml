@@ -6,15 +6,14 @@ vars:
 
 tasks:
 
-  setup:
-    desc: Install nas
+  install:
+    desc: Install K3s
     dir: "{{.ANSIBLE_PLAYBOOK_DIR}}"
     cmds:
-      - ansible-playbook nas/install.yaml
-
+      - ansible-playbook k3s/install.yaml
 
   nuke:
-    desc: Nuke nas
+    desc: Nuke K3s
     dir: "{{.ANSIBLE_PLAYBOOK_DIR}}"
     cmds:
-      - ansible-playbook nas/nuke.yaml
+      - ansible-playbook k3s/nuke.yaml

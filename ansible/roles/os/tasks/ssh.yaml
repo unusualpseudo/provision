@@ -56,9 +56,3 @@
       line: "AllowUsers {{ ansible_user }}"
     - regexp: "^#?Banner"
       line: "Banner /etc/ssh/ssh_banner.txt"
-
-
-- name: SSH | Remove welcome message
-  file:
-    path: "/home/{{ ansible_user }}/.hushlogin"
-    state: touch

@@ -13,6 +13,7 @@ includes:
   sops: ./.taskfiles/SopsTasks.yaml
   pre-commit: ./.taskfiles/PrecommitTasks.yaml
   os: ./.taskfiles/OSTasks.yaml
+  k3s: ./.taskfiles/K3STasks.yaml
   nas: ./.taskfiles/NASTasks.yaml
 
 tasks:
