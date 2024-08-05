@@ -1,6 +1,6 @@
 ---
 ignore: |
-  .vscode/
+  .idea/
   *.sops.yaml
 extends: default
 rules:

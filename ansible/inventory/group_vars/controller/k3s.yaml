@@ -7,6 +7,7 @@ k3s_control_node: true
 k3s_server:
   node-ip: "{{ ansible_host }}"
   write-kubeconfig-mode: "644"
+
   docker: false
   flannel-backend: "none"
   disable:
@@ -14,6 +15,11 @@ k3s_server:
     - metrics-server                  # installed with Flux
     - servicelb                       # replaced with MetalLB Helm Chart
     - traefik                         # replaced with ingress-nginx Helm Chart
+    - local-storage
+  etcd-disable-snapshots: true
+  etcd-expose-metrics: true           # Required to monitor etcd with kube-prometheus-stack
+
+  embedded-registry: true
 
   disable-network-policy: true
   disable-cloud-controller: true
@@ -22,18 +28,21 @@ k3s_server:
 
   cluster-cidr: "{{ k3s_cluster_cidr }}"
   service-cidr: "{{ k3s_service_cidr }}"
+  tls-san:
+    - "{{ k3s_registration_address }}" # kube-vip
 
+  # allow running etcd on slower CPUs and disks
+  etcd-arg:
+    - "election-timeout=5000"
+    - "heartbeat-interval=250"
   kubelet-arg:
     - "image-gc-high-threshold=64"
     - "image-gc-low-threshold=55"
   kube-controller-manager-arg:
-    - "bind-address=0.0.0.0"
+    - "bind-address=0.0.0.0"  # Required to monitor kube-controller-manager with kube-prometheus-stack
   kube-proxy-arg:
-    - "metrics-bind-address=0.0.0.0"
+    - "metrics-bind-address=0.0.0.0" # Required to monitor kube-proxy with kube-prometheus-stack
   kube-scheduler-arg:
-    - "bind-address=0.0.0.0"
+    - "bind-address=0.0.0.0" # Required to monitor kube-scheduler with kube-prometheus-stack
   kube-apiserver-arg:
-    - "bind-address=0.0.0.0"
-
-  node-taint:
-    - "node-role.kubernetes.io/control-plane:NoSchedule"
+    - "bind-address=0.0.0.0" # Required for HAProxy health-checks
