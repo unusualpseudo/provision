@@ -9,6 +9,10 @@
         patterns: ["^custom-.*"]
       register: custom_manifest
 
+    - name: Cruft | Get list of custom manifests
+      debug:
+        msg: "{{ k3s_server_manifests_dir }}"
+
     - name: Cruft | Delete custom manifests
       ansible.builtin.file:
         path: "{{ item.path }}"

@@ -1,20 +1,22 @@
 ---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: "3"
+
+dotenv: [".envrc"]
+
+env:
+  ANSIBLE_CONFIG: "{{.ROOT_DIR}}/ansible.cfg"
 
 vars:
   ANSIBLE_DIR: "{{.ROOT_DIR}}/ansible"
 
-env:
-  ANSIBLE_CONFIG: "{{.ANSIBLE_DIR}}/ansible.cfg"
-
-dotenv: [".envrc"]
-
 includes:
-  sops: ./.taskfiles/SopsTasks.yaml
-  pre-commit: ./.taskfiles/PrecommitTasks.yaml
-  os: ./.taskfiles/OSTasks.yaml
-  k3s: ./.taskfiles/K3STasks.yaml
-  nas: ./.taskfiles/NASTasks.yaml
+  sops: ./.taskfiles/Sops/Taskfile.yaml
+  pre-commit: ./.taskfiles/Precommit/Taskfile.yaml
+  kubernetes:
+    aliases: ["k8s"]
+    taskfile: ./.taskfiles/Kubernetes/Taskfile.yaml
+  nas: ./.taskfiles/NAS/Taskfile.yaml
 
 tasks:
   ansible-init:

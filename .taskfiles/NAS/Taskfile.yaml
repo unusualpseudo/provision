@@ -1,0 +1,22 @@
+---
+version: "3"
+
+env:
+  ANSIBLE_PLAYBOOK_DIR: "{{.ANSIBLE_DIR}}/{{.CLUSTER}}/playbooks"
+  ANSIBLE_INVENTORY_DIR: "{{.ANSIBLE_DIR}}/main/inventory"
+
+
+tasks:
+
+  setup:
+    desc: Install nas
+    dir: "{{.ANSIBLE_DIR}}"
+    cmds:
+      - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml {{.ANSIBLE_PLAYBOOK_DIR}}/nas/install.yaml
+
+
+  nuke:
+    desc: Nuke nas
+    dir: "{{.ANSIBLE_PLAYBOOK_DIR}}"
+    cmds:
+      - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml {{.ANSIBLE_PLAYBOOK_DIR}}/nas/nuke.yaml

@@ -1,7 +1,6 @@
 ---
 - name: K3s Cluster Install
-  hosts:
-    - kubernetes
+  hosts: kubernetes
   any_errors_fatal: true
   become: true
   gather_facts: true
@@ -59,8 +58,12 @@
         - k3s_control_node is defined
         - k3s_control_node
 
+    - name: Coredns
+      when: k3s_primary_control_node
+      ansible.builtin.include_tasks: tasks/coredns.yaml
+
     - name: Cruft
-      when: k3s_control_node
+      when: k3s_primary_control_node
       ansible.builtin.include_tasks: tasks/cruft.yaml
 
     - name: Stale contrainers

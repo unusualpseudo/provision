@@ -1,5 +1,5 @@
 ---
-- name: Reboot
+- name: Reboot all kubernetes nodes
   hosts: kubernetes
   become: true
   gather_facts: true
@@ -9,7 +9,7 @@
       ansible.builtin.pause:
         seconds: 5
   tasks:
-    - name: Reboot
+    - name: Rebooting all kubernetes nodes
       ansible.builtin.reboot:
         msg: Rebooting hosts
         reboot_timeout: 3600

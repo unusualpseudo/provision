@@ -12,3 +12,4 @@ kubernetes:
     storage:
       hosts:
         apex:
+        rift:

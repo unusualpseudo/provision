@@ -1,5 +1,5 @@
 ---
-- name: Setup Ubuntu server OS
+- name: Prepare Ubuntu server OS
   hosts: all
   any_errors_fatal: true
   become: true
@@ -11,6 +11,6 @@
         seconds: 2
 
   tasks:
-    - name: Setup Ubuntu server OS
+    - name: Prepare Ubuntu server OS
       ansible.builtin.include_role:
         name: os

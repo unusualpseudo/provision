@@ -1,0 +1,65 @@
+---
+version: "3"
+
+vars:
+  ANSIBLE_PLAYBOOK_DIR: "{{.ANSIBLE_DIR}}/main/playbooks"
+  ANSIBLE_INVENTORY_DIR: "{{.ANSIBLE_DIR}}/main/inventory"
+
+
+tasks:
+
+  prepare:
+    desc: Prepare kubernetes hosts
+    dir: "{{.ANSIBLE_DIR}}"
+    cmds:
+      - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml {{.ANSIBLE_PLAYBOOK_DIR}}/kubernetes/prepare.yaml
+
+  install:
+    desc: Install kubernetes
+    dir: "{{.ANSIBLE_DIR}}"
+    cmds:
+      - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml {{.ANSIBLE_PLAYBOOK_DIR}}/kubernetes/install.yaml
+
+  kubeconfig:
+    desc: Download kubeconfig
+    dir: "{{.ANSIBLE_PLAYBOOK_DIR}}"
+    cmds:
+      - echo "{{.cluster}}"
+      - pwd
+      - ansible-playbook  -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml {{.ANSIBLE_PLAYBOOK_DIR}}/kubernetes/kubeconfig.yaml
+
+  nuke:
+    desc: Nuke kubernetes
+    dir: "{{.ANSIBLE_PLAYBOOK_DIR}}"
+    cmds:
+      - ansible-playbook  -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml {{.ANSIBLE_PLAYBOOK_DIR}}/kubernetes/nuke.yaml
+
+  reboot:
+    desc: Reboot all the kubernetes hosts
+    dir: "{{.ANSIBLE_DIR}}"
+    cmds:
+      - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml {{.ANSIBLE_PLAYBOOK_DIR}}/kubernetes/reboot.yaml
+
+  poweroff:
+    desc: Shutdown all the kubernetes hosts
+    dir: "{{.ANSIBLE_DIR}}"
+    cmds:
+      - ansible kubernetes -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml -a '/usr/bin/systemctl poweroff' --become
+
+  list:
+    desc: List kubernetes hosts
+    dir: "{{.ANSIBLE_DIR}}"
+    cmds:
+      - ansible kubernetes -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml  --list-hosts
+
+  ping:
+    desc: Ping kubernetes hosts
+    dir: "{{.ANSIBLE_DIR}}"
+    cmds:
+      - ansible kubernetes -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml -m 'ping'
+
+  uptime:
+    desc: Uptime kubernetes all hosts
+    dir: "{{.ANSIBLE_DIR}}"
+    cmds:
+      - ansible kubernetes -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml --one-line -a 'uptime'
