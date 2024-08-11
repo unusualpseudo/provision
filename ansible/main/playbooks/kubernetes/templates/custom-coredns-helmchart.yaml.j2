@@ -9,7 +9,7 @@ spec:
   # renovate: datasource=helm
   repo: https://coredns.github.io/helm
   chart: coredns
-  version: 1.29.0
+  version: 1.32.0
   targetNamespace: kube-system
   bootstrap: true
   valuesContent: |-
@@ -18,9 +18,7 @@ spec:
     k8sAppLabelOverride: kube-dns
     service:
       name: kube-dns
-      clusterIP: {{ coredns_addr }}
-      clusterIPs:
-      - {{ coredns_addr }}
+      clusterIP: {{ k3s_server['service-cidr'] | ansible.utils.nthhost(10) }}
     serviceAccount:
       create: true
     deployment:

@@ -17,14 +17,13 @@ k3s_server:
     - traefik                         # replaced with ingress-nginx Helm Chart
     - local-storage                   # replaced with EBS
     - coredns                          # replaced with Coredns Helm Chart
+    -
   etcd-disable-snapshots: true
   etcd-expose-metrics: true           # Required to monitor etcd with kube-prometheus-stack
 
-  embedded-registry: true
-
   disable-network-policy: true
   disable-cloud-controller: true
-  disable-kube-proxy: false
+  disable-kube-proxy: true
   disable-helm-controller: false
 
   cluster-cidr: "{{ k3s_cluster_cidr }}"

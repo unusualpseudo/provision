@@ -1,19 +1,19 @@
 ---
-- name: Coredns
+- name: Cilium
   block:
-    - name: Coredns | Check if Coredns HelmChart exists
+    - name: Cilium | Check if Cilium HelmChart exists
       kubernetes.core.k8s_info:
         kubeconfig: /etc/rancher/k3s/k3s.yaml
-        name: coredns
+        name: cilium
         kind: HelmChart
         namespace: kube-system
-      register: coredns_helmchart
+      register: cilium_helmchart
 
-    - name: Coredns | Wait for Coredns to rollout
-      when: coredns_helmchart.resources | count > 0
+    - name: Cilium | Wait for Cilium to rollout
+      when: cilium_helmchart.resources | count > 0
       kubernetes.core.k8s_info:
         kubeconfig: /etc/rancher/k3s/k3s.yaml
-        name: helm-install-coredns
+        name: helm-install-cilium
         kind: Job
         namespace: kube-system
         wait: true
@@ -22,11 +22,11 @@
           status: true
         wait_timeout: 360
 
-    - name: Coredns | Patch the Coredns HelmChart to unmanage it
-      when: coredns_helmchart.resources | count > 0
+    - name: Cilium | Patch the Cilium HelmChart to unmanage it
+      when: cilium_helmchart.resources | count > 0
       kubernetes.core.k8s_json_patch:
         kubeconfig: /etc/rancher/k3s/k3s.yaml
-        name: coredns
+        name: cilium
         kind: HelmChart
         namespace: kube-system
         patch:
@@ -34,22 +34,21 @@
             path: /metadata/annotations/helmcharts.helm.cattle.io~1unmanaged
             value: "true"
 
-    - name: Coredns | Delete the Coredns HelmChart CR
-      when: coredns_helmchart.resources | count > 0
+    - name: Cilium | Delete the Cilium HelmChart CR
+      when: cilium_helmchart.resources | count > 0
       kubernetes.core.k8s:
         kubeconfig: /etc/rancher/k3s/k3s.yaml
-        name: coredns
+        name: cilium
         kind: HelmChart
         namespace: kube-system
         state: absent
 
     # Ref: https://github.com/k3s-io/helm-controller/issues/33
-    - name: Coredns | Force delete the Coredns HelmChart
-      when: coredns_helmchart.resources | count > 0
-      failed_when: false
+    - name: Cilium | Force delete the Cilium HelmChart
+      when: cilium_helmchart.resources | count > 0
       kubernetes.core.k8s:
         kubeconfig: /etc/rancher/k3s/k3s.yaml
-        name: coredns
+        name: cilium
         kind: HelmChart
         namespace: kube-system
         state: patched

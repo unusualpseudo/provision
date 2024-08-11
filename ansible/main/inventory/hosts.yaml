@@ -5,11 +5,7 @@ kubernetes:
       hosts:
         apex:
           ansible_host: 192.168.1.49
-        horizon:
-          ansible_host: 192.168.1.51
         rift:
           ansible_host: 192.168.1.50
-    storage:
-      hosts:
-        apex:
-        rift:
+        horizon:
+          ansible_host: 192.168.1.51

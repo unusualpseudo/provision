@@ -11,12 +11,14 @@ vars:
   ANSIBLE_DIR: "{{.ROOT_DIR}}/ansible"
 
 includes:
-  sops: ./.taskfiles/Sops/Taskfile.yaml
-  pre-commit: ./.taskfiles/Precommit/Taskfile.yaml
+  sops: ./.taskfiles/sops/Taskfile.yaml
+  pre-commit: ./.taskfiles/precommit/Taskfile.yaml
   kubernetes:
     aliases: ["k8s"]
-    taskfile: ./.taskfiles/Kubernetes/Taskfile.yaml
-  nas: ./.taskfiles/NAS/Taskfile.yaml
+    taskfile: ./.taskfiles/kubernetes/Taskfile.yaml
+  storage:
+    aliases: ["nas"]
+    taskfile: ./.taskfiles/storage/Taskfile.yaml
 
 tasks:
   ansible-init:

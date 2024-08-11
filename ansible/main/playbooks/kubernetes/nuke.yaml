@@ -71,12 +71,17 @@
         state: absent
       loop: ["kubectl", "crictl", "ctr"]
 
-    - name: Delete extra files
+
+    - name: Remove longhorn storage path
       ansible.builtin.file:
-        path: '{{ item }}'
+        path: "/var/lib/longhorn"
         state: absent
-      with_items:
-        - $HOME/.rancher
+
+    - name: Remove openebs storage path
+      ansible.builtin.file:
+        path: "/var/openebs/local"
+        state: absent
+
 
     - name: Stale Containers
       ansible.builtin.include_tasks: tasks/stale_containers.yaml

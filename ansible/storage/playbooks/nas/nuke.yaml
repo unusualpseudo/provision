@@ -1,0 +1,55 @@
+- name: Nuke NAS
+  hosts: nas
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+
+
+  tasks:
+    - name: Check if ZFS pool exists
+      command: zpool list -H -o name {{ pool_name }}
+      register: zpool_check
+      failed_when: "false"
+      changed_when: "false"
+
+    - name: Assert that ZFS pool exists
+      assert:
+        that:
+          - zpool_check.rc == 0
+        fail_msg: "The ZFS pool {{ pool_name }} does not exist. Aborting playbook."
+
+    - name: Unshared all ZFS datasets
+      command: zfs unshare -a
+      when: zpool_check.rc == 0
+      register: unshare_result
+      failed_when: unshare_result.rc != 0
+      changed_when: unshare_result.rc == 0
+
+    - name: Unmount all ZFS datasets
+      command: zfs unmount -a
+      when: zpool_check.rc == 0
+      register: unmount_result
+      failed_when: unmount_result.rc != 0
+      changed_when: unmount_result.rc == 0
+
+    - name: Destroy ZFS pool and all datasets
+      command: zpool destroy -f {{ pool_name }}
+      when: zpool_check.rc == 0
+      register: destroy_result
+      changed_when: destroy_result.rc == 0
+      failed_when: destroy_result.rc != 0
+
+    - name: Notify if ZFS pool was destroyed
+      debug:
+        msg: "The ZFS pool {{ pool_name }} has been destroyed."
+      when: destroy_result.changed
+
+  post_tasks:
+    - name: Show ZFS pool status after cleanup
+      shell: zpool status
+      register: zpool_status
+      changed_when: false
+
+    - name: Show ZFS pool status
+      debug:
+        msg: "{{ zpool_status.stdout }}"

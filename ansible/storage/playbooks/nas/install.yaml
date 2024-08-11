@@ -1,7 +1,6 @@
 ---
-- name: Setup NAS
-  hosts: storage
-  become: true
+- name: Install NAS
+  hosts: nas
   gather_facts: true
   any_errors_fatal: true
 
@@ -14,12 +13,12 @@
 
     - name: Check if disk device is available
       stat:
-        path: "{{ disk_device }}"
+        path: "/dev/disk/by-id/{{ disk_device_id }}"
       register: disk_stat
 
     - name: Fail if disk device is not available
       fail:
-        msg: "The specified disk device {{ disk_device }} does not exist."
+        msg: "The specified disk device {{ disk_device_id }} does not exist."
       when: not disk_stat.stat.exists
 
     - name: Check if ZFS pool already exists
@@ -33,10 +32,9 @@
         msg: "The ZFS pool {{ pool_name }} already exists."
       when: zpool_check.rc == 0
 
-
   tasks:
     - name: Create ZFS pool
-      shell: "zpool create -o ashift=12 -f {{ pool_name }} {{ disk_device }}"
+      shell: "zpool create -o ashift=12 -f {{ pool_name }} /dev/disk/by-id/{{ disk_device_id }}"
 
     - name: Set ZFS property atime
       shell: "zfs set atime=off {{ pool_name }}"

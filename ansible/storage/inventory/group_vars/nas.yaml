@@ -1,14 +1,16 @@
 ---
-disk_device: "/dev/sda"
 pool_name: "nas"
 datasets:
   - name: "nas/Apps"
   - name: "nas/Apps/Longhorn"
+  - name: "nas/Apps/Minio"
   - name: "nas/Apps/Media"
 
-nfs_options: "no_subtree_check,all_squash,anonuid=1000,anongid=1000,rw=@192.168.1.0/24"
-uid: 1000
-gid: 1000
+nodes_cidr: "192.168.1.0/24"
+uid: 442
+gid: 442
+
+nfs_options: "no_subtree_check,all_squash,anonuid={{uid}},anongid={{gid}},rw=@{{nodes_cidr}}"
 
 
 apt_install_packages:
@@ -18,3 +20,8 @@ apt_install_packages:
   - nfs-common
   - open-iscsi
   - smartmontools
+  - nvme-cli
+  - lvm2
+  - ffmpeg
+  - gdisk
+  - fdisk

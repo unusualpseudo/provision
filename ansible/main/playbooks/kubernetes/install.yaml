@@ -43,11 +43,12 @@
         wait_sleep: 10
         wait_timeout: 360
       loop:
-        - kind: Deployment
-          name: tigera-operator
-          namespace: tigera-operator
-        - kind: Installation
-          name: default
+        - kind: HelmChart
+          name: cilium
+          namespace: kube-system
+        - kind: HelmChart
+          name: coredns
+          namespace: kube-system
         - kind: DaemonSet
           name: kube-vip
           namespace: kube-system
@@ -61,6 +62,10 @@
     - name: Coredns
       when: k3s_primary_control_node
       ansible.builtin.include_tasks: tasks/coredns.yaml
+
+    - name: Cilium
+      when: k3s_primary_control_node
+      ansible.builtin.include_tasks: tasks/cilium.yaml
 
     - name: Cruft
       when: k3s_primary_control_node
