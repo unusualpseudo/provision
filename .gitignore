@@ -3,3 +3,7 @@
 kubeconfig
 
 .envrc
+
+.env
+
+keys.age

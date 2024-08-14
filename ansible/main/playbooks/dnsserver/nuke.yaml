@@ -1,0 +1,38 @@
+---
+- name: Install Network
+  hosts: dns_server
+  any_errors_fatal: true
+  become: true
+  gather_facts: true
+
+  pre_tasks:
+    - name: Pausing for 5 seconds...
+      ansible.builtin.pause:
+        seconds: 5
+
+  tasks:
+    - name: Prune everything
+      community.docker.docker_prune:
+        containers: true
+        images: true
+        networks: true
+        volumes: true
+        builder_cache: true
+
+    - name: Ensure apt key is not present in trusted.gpg.d
+      ansible.builtin.file:
+        path: /etc/apt/trusted.gpg.d/docker.asc
+        state: absent
+
+    - name: Ensure apt key is not present in trusted.gpg.d
+      ansible.builtin.file:
+        path: /etc/apt/sources.list.d/docker.list
+        state: absent
+
+    - name: Uninstall docker
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+      vars:
+        docker_packages_state: absent
+        docker_service_manage: false
+        docker_compose_package_state: absent

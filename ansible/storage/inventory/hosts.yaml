@@ -1,9 +1,0 @@
----
-nas:
-  hosts:
-    apex: #ssd
-      ansible_host: 192.168.1.49
-      disk_device_id: "usb-Micron_CT1000X9PROSSD9_2409E8C145DD-0:0"
-    rift: #hdd
-      ansible_host: 192.168.1.50
-      disk_device_id: "usb-WD_Elements_25A1_575834314442384E39444131-0:0"

@@ -1,7 +1,4 @@
 ---
-# To copy ssh keys from github
-github_username: unusualpseudo
-
 apt_install_packages:
   - vim
   - curl
@@ -10,22 +7,17 @@ apt_install_packages:
   - apt-transport-https
   - ca-certificates
   - software-properties-common
-  - python3-pip
-  - python3-setuptools
-  - python3-kubernetes
-  - python3-yaml
   - net-tools
-  - gdisk
-  - fdisk
   - htop
   - unzip
   - arptables
-  - lvm2
-  - nfs-common
-  - open-iscsi
   - software-properties-common
   - unzip
+  - dnsutils
+  - iputils-ping
 
+pip_packages:
+  - docker
 
 apt_remove_packages:
   - ufw
@@ -33,6 +25,7 @@ apt_remove_packages:
   - apparmor
 
 timezone: "Europe/Paris"
+
 # Add cloudflare ntp server
 ntp_servers:
   primary:

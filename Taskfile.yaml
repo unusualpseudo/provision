@@ -2,31 +2,59 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: "3"
 
-dotenv: [".envrc"]
+dotenv: [ ".envrc" ]
 
 env:
   ANSIBLE_CONFIG: "{{.ROOT_DIR}}/ansible.cfg"
 
 vars:
   ANSIBLE_DIR: "{{.ROOT_DIR}}/ansible"
+  ANSIBLE_PLAYBOOK_DIR: "{{.ANSIBLE_DIR}}/main/playbooks"
+  ANSIBLE_INVENTORY_DIR: "{{.ANSIBLE_DIR}}/main/inventory"
 
 includes:
   sops: ./.taskfiles/sops/Taskfile.yaml
   pre-commit: ./.taskfiles/precommit/Taskfile.yaml
   kubernetes:
-    aliases: ["k8s"]
+    aliases: [ "k8s" ]
     taskfile: ./.taskfiles/kubernetes/Taskfile.yaml
-  storage:
-    aliases: ["nas"]
-    taskfile: ./.taskfiles/storage/Taskfile.yaml
+  os:
+    taskfile: ./.taskfiles/os/Taskfile.yaml
 
 tasks:
   ansible-init:
     desc: Install/Upgrade Ansible galaxy dependencies
-    dir: "{{.ANSIBLE_DIR}}"
     cmds:
-      - ansible-galaxy collection install -r requirements.yaml --collections-path ~/.ansible/collections --force
-      - ansible-galaxy install -r requirements.yaml --roles-path ~/.ansible/roles --force
+      - ansible-galaxy install -r {{.ANSIBLE_DIR}}/main/requirements.yaml --force
+
+  prepare-*:
+    desc: Setup OS
+    vars:
+      LAYER: '{{index .MATCH 0}}'
+    cmds:
+      - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}} {{.ANSIBLE_PLAYBOOK_DIR}}/{{.LAYER}}/prepare.yaml
+
+  install-*:
+    desc: Install infrastructure
+    vars:
+      LAYER: '{{index .MATCH 0}}'
+    cmds:
+      - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}} {{.ANSIBLE_PLAYBOOK_DIR}}/{{.LAYER}}/install.yaml
+
+  nuke-*:
+    desc: Nuke infrastructure
+    vars:
+      LAYER: '{{index .MATCH 0}}'
+    cmds:
+      - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}} {{.ANSIBLE_PLAYBOOK_DIR}}/{{.LAYER}}/nuke.yaml
+
+  reboot-*:
+    desc: Reboot group of hosts
+    vars:
+      LAYER: '{{index .MATCH 0}}'
+    cmds:
+      - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml {{.ANSIBLE_PLAYBOOK_DIR}}/reboot.yaml
+
   default:
     silent: true
     cmds:

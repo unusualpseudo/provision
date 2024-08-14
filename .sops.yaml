@@ -5,3 +5,8 @@ creation_rules:
     key_groups:
       - age:
           - "age1zqydytfsqv3g789ud2jjhrflk445wcadnz0fccrf82zhwfwcgd4q404rtr"
+
+  - path_regex: ansible/.*\.sops\.txt
+    key_groups:
+      - age:
+          - "age1zqydytfsqv3g789ud2jjhrflk445wcadnz0fccrf82zhwfwcgd4q404rtr"

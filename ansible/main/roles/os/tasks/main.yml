@@ -1,7 +1,10 @@
 ---
 - include_tasks: kernel.yaml
+  when: inventory_hostname in groups['kubernetes']
 - include_tasks: fs.yaml
+  when: inventory_hostname in groups['kubernetes']
 - import_tasks: network.yaml
+- import_tasks: nfs.yaml
 - import_tasks: ntp.yaml
 - import_tasks: firewall.yaml
 - import_tasks: packages.yaml

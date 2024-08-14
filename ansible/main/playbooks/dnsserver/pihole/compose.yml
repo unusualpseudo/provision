@@ -1,0 +1,38 @@
+---
+services:
+  sops:
+    container_name: sops
+    image: mozilla/sops:latest
+    command: ["/bin/sh", "-c", "sops --decrypt /secrets/pihole.sops.txt > /secrets/pihole.txt"]
+    volumes:
+      - ./secrets:/secrets
+      - ~/age:/age:ro
+    environment:
+      - SOPS_AGE_KEY_FILE=/age/keys.age
+
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    depends_on:
+      - sops
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "8080:80/tcp"
+    networks:
+      - dns
+    environment:
+      WEBPASSWORD_FILE: '/secrets/pihole.txt'
+    volumes:
+      - './secrets:/secrets'
+      - './etc-pihole:/etc/pihole'
+      - './etc-dnsmasq.d:/etc/dnsmasq.d'
+    restart: unless-stopped
+
+networks:
+  dns:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.30.0.0/24

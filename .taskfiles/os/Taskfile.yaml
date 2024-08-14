@@ -1,0 +1,29 @@
+---
+version: "3"
+
+tasks:
+
+  reboot:
+    desc: Reboot all the hosts
+    cmds:
+      - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml {{.ANSIBLE_PLAYBOOK_DIR}}/os/reboot.yaml
+
+  poweroff:
+    desc: Shutdown all the hosts
+    cmds:
+      - ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml -a '/usr/bin/systemctl poweroff' --become
+
+  list:
+    desc: List all hosts
+    cmds:
+      - ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml  --list-hosts
+
+  ping:
+    desc: Ping all hosts
+    cmds:
+      - ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml -m 'ping'
+
+  uptime:
+    desc: Uptime all hosts
+    cmds:
+      - ansible all -i {{.ANSIBLE_INVENTORY_DIR}}/hosts.yaml --one-line -a 'uptime'

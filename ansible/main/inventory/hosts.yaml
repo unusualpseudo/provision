@@ -1,11 +1,22 @@
----
-kubernetes:
+all:
   children:
-    controller:
+    kubernetes:
+      children:
+        controller:
+          hosts:
+            apex:
+              ansible_host: 192.168.1.100
+            titan:
+              ansible_host: 192.168.1.101
+            rift:
+              ansible_host: 192.168.1.102
+    dnsserver:
+      hosts:
+        horizon:
+          ansible_host: 192.168.1.105
+    storage:
       hosts:
         apex:
-          ansible_host: 192.168.1.49
-        rift:
-          ansible_host: 192.168.1.50
-        horizon:
-          ansible_host: 192.168.1.51
+          disk_device_id: "usb-Micron_CT1000X9PROSSD9_2409E8C145DD-0:0"
+        titan:
+          disk_device_id: "usb-WD_Elements_25A1_575834314442384E39444131-0:0"

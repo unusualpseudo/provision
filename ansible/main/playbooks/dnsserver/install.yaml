@@ -1,8 +1,8 @@
 ---
-- name: Prepare Ubuntu server OS
-  hosts: kubernetes
+- name: Install Network
+  hosts: dnsserver
   any_errors_fatal: true
-  become: true
+  become: false
   gather_facts: true
 
   pre_tasks:
@@ -11,6 +11,5 @@
         seconds: 2
 
   tasks:
-    - name: Prepare Ubuntu server OS
-      ansible.builtin.include_role:
-        name: os
+    - name: Install pihole
+      ansible.builtin.include_tasks: tasks/pihole.yaml

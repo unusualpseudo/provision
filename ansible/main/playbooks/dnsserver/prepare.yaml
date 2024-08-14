@@ -1,6 +1,6 @@
 ---
 - name: Prepare Ubuntu server OS
-  hosts: kubernetes
+  hosts: dns_server
   any_errors_fatal: true
   become: true
   gather_facts: true
@@ -14,3 +14,13 @@
     - name: Prepare Ubuntu server OS
       ansible.builtin.include_role:
         name: os
+
+    - name: Install Docker, Docker compose (as plugin)
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+  post_tasks:
+    - name: Rebooting...
+      ansible.builtin.reboot:
+        msg: Rebooting hosts
+        reboot_timeout: 3600
