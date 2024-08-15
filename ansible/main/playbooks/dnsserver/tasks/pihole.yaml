@@ -1,55 +1,64 @@
 ---
 
-- name: Tear down existing services
-  community.docker.docker_compose_v2:
-    project_src: "{{ ansible_env.HOME }}/apps/pihole"
-    state: absent
+- name: Install dnsserver
+  become: false
+  block:
+    - name: Check if the pihole directory exists
+      stat:
+        path: "{{ ansible_env.HOME }}/apps/pihole"
+      register: pihole_dir
 
-- name: Prune everything
-  community.docker.docker_prune:
-    containers: true
-    images: true
-    networks: true
-    volumes: true
-    builder_cache: true
+    - name: Tear down existing services if pihole directory exists
+      community.docker.docker_compose_v2:
+        project_src: "{{ ansible_env.HOME }}/apps/pihole"
+        state: absent
+      when: pihole_dir.stat.exists
 
-- name: Ensure the target directory is removed if it exists
-  become: true
-  file:
-    path: "/home/{{ ansible_user }}/apps/pihole"
-    state: absent
+    - name: Prune everything
+      community.docker.docker_prune:
+        containers: true
+        images: true
+        networks: true
+        volumes: true
+        builder_cache: true
 
-- name: Recreate the target directory
-  file:
-    path: "/home/{{ ansible_user }}/apps/pihole"
-    state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: '0755'
+    - name: Ensure the target directory is removed if it exists
+      file:
+        path: "/home/{{ ansible_user }}/apps/pihole"
+        state: absent
+      when: pihole_dir.stat.exists
 
-- name: Copy age keys
-  file:
-    path: "{{ ansible_env.HOME }}/.config/sops/age"
-    dest: "/home/{{ ansible_user }}/"
-    state: directory
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: '0755'
+    - name: Recreate the target directory
+      file:
+        path: "/home/{{ ansible_user }}/apps/pihole"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0755'
 
-- name: Copy Pi-hole folder to target host
-  copy:
-    src: "{{playbook_dir ~ '/pihole/'}}"
-    dest: "/home/{{ ansible_user }}/apps/pihole"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
-    mode: '0755'
-    directory_mode: '0755'
+    - name: Copy age keys
+      file:
+        path: "{{ ansible_env.HOME }}/.config/sops/age"
+        dest: "/home/{{ ansible_user }}/"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0755'
 
-- name: Create and start services
-  community.docker.docker_compose_v2:
-    project_src: "/home/{{ ansible_user }}/apps/pihole"
-  register: output
+    - name: Copy Pi-hole folder to target host
+      copy:
+        src: "{{playbook_dir ~ '/pihole/'}}"
+        dest: "/home/{{ ansible_user }}/apps/pihole"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0755'
+        directory_mode: '0755'
 
-- name: Show results
-  ansible.builtin.debug:
-    var: output
+    - name: Create and start services
+      community.docker.docker_compose_v2:
+        project_src: "/home/{{ ansible_user }}/apps/pihole"
+      register: output
+
+    - name: Show results
+      ansible.builtin.debug:
+        var: output

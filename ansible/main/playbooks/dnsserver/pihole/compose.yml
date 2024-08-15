@@ -18,10 +18,11 @@ services:
     ports:
       - "53:53/tcp"
       - "53:53/udp"
-      - "8080:80/tcp"
+      - "80:80/tcp"
     networks:
       - dns
     environment:
+      PIHOLE_DNS_: "1.1.1.1;1.0.0.1;8.8.8.8;8.8.4.4"
       WEBPASSWORD_FILE: '/secrets/pihole.txt'
     volumes:
       - './secrets:/secrets'
