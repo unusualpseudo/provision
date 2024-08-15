@@ -1,5 +1,5 @@
 ---
-- name: Install Network
+- name: Install dnsserver components
   hosts: dnsserver
   any_errors_fatal: true
   become: false
@@ -11,5 +11,9 @@
         seconds: 2
 
   tasks:
+    - name: Install Docker, Docker compose (as plugin)
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
     - name: Install pihole
       ansible.builtin.include_tasks: tasks/pihole.yaml

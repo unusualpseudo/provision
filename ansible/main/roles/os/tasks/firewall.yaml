@@ -7,7 +7,7 @@
 
 - name: Firewall | Define fail2ban ssh policy
   copy:
-    src: ../templates/jail.local.j2
+    src: jail.local
     dest: /etc/fail2ban/jail.local
     owner: root
     group: root
@@ -44,23 +44,39 @@
     - /etc/iptables.v4.saved
 
 - name: Firewall | rule to allow all loopback traffic
-  iptables:
+  ansible.builtin.iptables:
     action: append
     chain: INPUT
     in_interface: lo
     jump: ACCEPT
 
 - name: Firewall | rule to allow established connections
-  iptables:
+  ansible.builtin.iptables:
     chain: INPUT
     ctstate: ESTABLISHED,RELATED
     jump: ACCEPT
 
 - name: Firewall | rule to allow port ping traffic
-  iptables:
+  ansible.builtin.iptables:
     chain: INPUT
     jump: ACCEPT
     protocol: icmp
+
+- name: Firewall | Open port 53 for DNS (TCP) if host is in dnsserver group
+  ansible.builtin.iptables:
+    chain: INPUT
+    protocol: tcp
+    destination_port: 53
+    jump: ACCEPT
+  when: "'dnsserver' in group_names"
+
+- name: Firewall | Open port 53 for DNS (UDP) if host is in dnsserver group
+  ansible.builtin.iptables:
+    chain: INPUT
+    protocol: udp
+    destination_port: 53
+    jump: ACCEPT
+  when: "'dnsserver' in group_names"
 
 - name: Firewall | Save rules (netfilter-persistent)
   command: netfilter-persistent save

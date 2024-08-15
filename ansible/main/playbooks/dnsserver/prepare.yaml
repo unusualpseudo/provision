@@ -1,6 +1,6 @@
 ---
 - name: Prepare Ubuntu server OS
-  hosts: dns_server
+  hosts: dnsserver
   any_errors_fatal: true
   become: true
   gather_facts: true

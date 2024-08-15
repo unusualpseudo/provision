@@ -1,6 +1,6 @@
 ---
-- name: Install Network
-  hosts: dns_server
+- name: Nuke dnsserver
+  hosts: dnsserver
   any_errors_fatal: true
   become: true
   gather_facts: true
@@ -19,6 +19,17 @@
         volumes: true
         builder_cache: true
 
+    - name: Uninstall docker
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+      vars:
+        docker_packages_state: absent
+        docker_service_manage: false
+        docker_compose_package_state: absent
+
+    - name: Delete remaining docker interface
+      command: ip link delete docker0
+
     - name: Ensure apt key is not present in trusted.gpg.d
       ansible.builtin.file:
         path: /etc/apt/trusted.gpg.d/docker.asc
@@ -28,11 +39,3 @@
       ansible.builtin.file:
         path: /etc/apt/sources.list.d/docker.list
         state: absent
-
-    - name: Uninstall docker
-      ansible.builtin.include_role:
-        name: geerlingguy.docker
-      vars:
-        docker_packages_state: absent
-        docker_service_manage: false
-        docker_compose_package_state: absent

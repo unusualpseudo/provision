@@ -1,0 +1,22 @@
+---
+- name: Remove existing /etc/resolv.conf if it exists
+  file:
+    path: /etc/resolv.conf
+    state: absent
+
+- name: Copy resolv.conf template to /etc/resolv.conf
+  template:
+    src: 'resolv.conf.j2'
+    dest: '/etc/resolv.conf'
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Disable systemd-resolved at boot
+  systemd:
+    name: systemd-resolved
+    enabled: no
+    state: stopped
+
+- name: Reload systemd daemon
+  command: systemctl daemon-reload
