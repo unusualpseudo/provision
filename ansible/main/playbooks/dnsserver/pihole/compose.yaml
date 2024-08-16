@@ -26,8 +26,9 @@ services:
       WEBPASSWORD_FILE: '/secrets/pihole.txt'
     volumes:
       - './secrets:/secrets'
-      - './etc-pihole:/etc/pihole'
       - './etc-dnsmasq.d:/etc/dnsmasq.d'
+      - './config/00-custom-dnsmasq-settings.conf:/etc/dnsmasq.d/00-custom-dnsmasq-settings.conf'
+      - './etc-pihole:/etc/pihole'
     restart: unless-stopped
 
 networks:

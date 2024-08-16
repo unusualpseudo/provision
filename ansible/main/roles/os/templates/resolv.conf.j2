@@ -14,12 +14,6 @@
 # See man:systemd-resolved.service(8) for details about the supported modes of
 # operation for /etc/resolv.conf.
 
-nameserver 127.0.0.1
-{% if 'dnsserver' in group_names %}
-nameserver 127.0.0.1
-{% else %}
-nameserver {{ hostvars.horizon.ansible_default_ipv4.address }}
-{% endif %}
 nameserver 1.1.1.1
 nameserver 1.0.0.1
 nameserver 8.8.8.8

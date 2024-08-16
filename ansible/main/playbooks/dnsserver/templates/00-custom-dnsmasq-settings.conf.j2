@@ -1,0 +1,4 @@
+address=/{{lookup('env', 'CLOUDFLARE_DOMAIN')}}/{{lookup('env', 'K8S_GATEWAY_ADDR')}}
+dns-forward-max=5096
+min-cache-ttl=300
+rebind-domain-ok=

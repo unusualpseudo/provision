@@ -5,13 +5,15 @@
   block:
     - name: Check if the pihole directory exists
       stat:
-        path: "{{ ansible_env.HOME }}/apps/pihole"
+        path: "{{ ansible_env.HOME }}/apps/pihole/"
       register: pihole_dir
 
     - name: Tear down existing services if pihole directory exists
       community.docker.docker_compose_v2:
         project_src: "{{ ansible_env.HOME }}/apps/pihole"
         state: absent
+        remove_orphans: true
+        remove_volumes: true
       when: pihole_dir.stat.exists
 
     - name: Prune everything
@@ -38,12 +40,12 @@
 
     - name: Copy age keys
       file:
-        path: "{{ ansible_env.HOME }}/.config/sops/age"
-        dest: "/home/{{ ansible_user }}/"
+        path: "{{ ansible_env.HOME }}/.config/sops/age/keys.age"
+        dest: "/home/{{ ansible_user }}/age"
         state: directory
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
-        mode: '0755'
+        mode: '0600'
 
     - name: Copy Pi-hole folder to target host
       copy:
@@ -52,7 +54,16 @@
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
         mode: '0755'
-        directory_mode: '0755'
+
+    - name: Ensures etc-dnsmasq.d is created
+      file:
+        path: '/home/{{ ansible_user }}/apps/pihole/config/'
+        state: directory
+
+    - name: Copy dnsmasq config template
+      template:
+        src: '00-custom-dnsmasq-settings.conf.j2'
+        dest: '/home/{{ ansible_user }}/apps/pihole/config/00-custom-dnsmasq-settings.conf'
 
     - name: Create and start services
       community.docker.docker_compose_v2:
