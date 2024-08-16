@@ -1,7 +1,8 @@
 ---
 - name: Install NAS
-  hosts: nas
+  hosts: storage
   gather_facts: true
+  become: true
   any_errors_fatal: true
 
   pre_tasks:
@@ -9,7 +10,7 @@
       apt:
         name: "{{ item }}"
         state: present
-      with_items: "{{ apt_install_packages }}"
+      with_items: "{{ storage_required_packages_list }}"
 
     - name: Check if disk device is available
       stat:

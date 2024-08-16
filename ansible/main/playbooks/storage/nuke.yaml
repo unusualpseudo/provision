@@ -1,9 +1,8 @@
 - name: Nuke NAS
-  hosts: nas
+  hosts: storage
   become: true
   gather_facts: true
   any_errors_fatal: true
-
 
   tasks:
     - name: Check if ZFS pool exists
