@@ -1,5 +1,5 @@
 ---
-- name: Remove existing /etc/resolv.conf if it exists
+- name: Remove /etc/resolv.conf if it exists (file or symlink)
   file:
     path: /etc/resolv.conf
     state: absent
@@ -20,3 +20,10 @@
 
 - name: Reload systemd daemon
   command: systemctl daemon-reload
+
+- name: Reboot OS
+  reboot:
+    msg: "Rebooting machine 5 seconds..., play will resume afterwards"
+    pre_reboot_delay: 5
+    post_reboot_delay: 30
+    reboot_timeout: 300

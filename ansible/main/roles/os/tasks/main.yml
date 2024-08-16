@@ -3,11 +3,11 @@
   when: inventory_hostname in groups['kubernetes']
 - include_tasks: fs.yaml
   when: inventory_hostname in groups['kubernetes']
+- import_tasks: packages.yaml
 - import_tasks: network.yaml
 - import_tasks: dns.yaml
 - import_tasks: nfs.yaml
 - import_tasks: ntp.yaml
 - import_tasks: firewall.yaml
-- import_tasks: packages.yaml
 - import_tasks: ssh.yaml
 - import_tasks: user.yaml

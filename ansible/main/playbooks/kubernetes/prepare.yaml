@@ -1,4 +1,9 @@
 ---
+## This plays will just gather the facts of dnsserver host
+- hosts: dnsserver
+  gather_subset:
+    - all_ipv4_addresses
+
 - name: Prepare Ubuntu server OS
   hosts: kubernetes
   any_errors_fatal: true
@@ -10,7 +15,12 @@
       ansible.builtin.pause:
         seconds: 2
 
-  tasks:
+  roles:
     - name: Prepare Ubuntu server OS
-      ansible.builtin.include_role:
-        name: os
+      role: os
+
+  post_tasks:
+    - name: Rebooting...
+      ansible.builtin.reboot:
+        msg: Rebooting hosts
+        reboot_timeout: 3600

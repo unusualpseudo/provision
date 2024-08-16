@@ -23,10 +23,10 @@ apt_install_packages:
   - unzip
   - dnsutils
   - iputils-ping
+  - python3-kubernetes
+  - python3-yaml
 
-pip_packages:
-  - kubernetes
-  - yaml
+pip_packages: []
 
 apt_remove_packages:
   - ufw

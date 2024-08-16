@@ -2,6 +2,7 @@
 - name: Install dnsserver components
   hosts: dnsserver
   any_errors_fatal: true
+  become: false
   gather_facts: true
 
   pre_tasks:
@@ -10,7 +11,8 @@
         seconds: 2
 
   roles:
-    - role: geerlingguy.docker
+    - name: Install Docker
+      role: geerlingguy.docker
       become: true
 
   tasks:
