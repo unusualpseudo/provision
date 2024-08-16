@@ -1,4 +1,5 @@
 ---
+
 # https://rancher.com/docs/k3s/latest/en/installation/install-options/server-config/
 # https://github.com/PyratLabs/ansible-role-k3s#server-control-plane-configuration
 
@@ -17,7 +18,6 @@ k3s_server:
     - traefik                         # replaced with ingress-nginx Helm Chart
     - local-storage                   # replaced with EBS
     - coredns                          # replaced with Coredns Helm Chart
-    -
   etcd-disable-snapshots: true
   etcd-expose-metrics: true           # Required to monitor etcd with kube-prometheus-stack
 

@@ -10,11 +10,16 @@
   retries: 5
   until: apt_upgrade is success
 
+- name: Debug apt_install_packages
+  ansible.builtin.debug:
+    var: apt_install_packages
+
 - name: System Packages | Install apt packages list
-  ansible.builtin.package:
+  ansible.builtin.apt:
     name: "{{ apt_install_packages }}"
-    state: latest
+    state: present
     update_cache: true
+    force_apt_get: yes
 
 - name: System Packages | Remove packages
   block:
@@ -38,3 +43,8 @@
     - pip_packages is defined
     - pip_packages is iterable
     - pip_packages | length > 0
+
+- name: Remove dependencies that are no longer required and purge their configuration files
+  ansible.builtin.apt:
+    autoremove: yes
+    purge: true

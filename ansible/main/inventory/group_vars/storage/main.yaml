@@ -12,8 +12,7 @@ gid: 442
 
 nfs_options: "no_subtree_check,all_squash,anonuid={{uid}},anongid={{gid}},rw=@{{nodes_cidr}}"
 
-
-apt_install_packages:
+storage_required_packages_list:
   - zfs-zed
   - zfsutils-linux
   - nfs-kernel-server

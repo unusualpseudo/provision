@@ -19,6 +19,7 @@
     - name: Prepare Ubuntu server OS
       role: os
 
+
   post_tasks:
     - name: Rebooting...
       ansible.builtin.reboot:

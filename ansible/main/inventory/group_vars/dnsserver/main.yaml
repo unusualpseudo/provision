@@ -1,4 +1,5 @@
 ---
+docker_users: ["{{ ansible_user }}"]
 apt_install_packages:
   - vim
   - curl
