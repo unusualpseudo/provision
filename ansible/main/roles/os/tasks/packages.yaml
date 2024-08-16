@@ -34,16 +34,6 @@
     - apt_remove_packages is iterable
     - apt_remove_packages | length > 0
 
-- name: Install pip packages from list
-  pip:
-    name: "{{ pip_packages }}"
-    state: present
-    executable: pip
-  when:
-    - pip_packages is defined
-    - pip_packages is iterable
-    - pip_packages | length > 0
-
 - name: Remove dependencies that are no longer required and purge their configuration files
   ansible.builtin.apt:
     autoremove: yes

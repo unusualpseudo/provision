@@ -16,9 +16,7 @@ apt_install_packages:
   - unzip
   - dnsutils
   - iputils-ping
-
-pip_packages:
-  - docker
+  - python3-docker
 
 apt_remove_packages:
   - ufw
