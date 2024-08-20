@@ -10,9 +10,12 @@ apt_install_packages:
   - net-tools
   - gdisk
   - fdisk
+  - libusb-dev
   - htop
   - unzip
   - arptables
+  - strace
+  - arping
   - lvm2
   - nfs-common
   - open-iscsi
@@ -29,7 +32,6 @@ apt_remove_packages:
   - apparmor
 
 timezone: "Europe/Paris"
-# Add cloudflare ntp server
 ntp_servers:
   primary:
     - "time.cloudflare.com"

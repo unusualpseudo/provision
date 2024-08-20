@@ -58,7 +58,6 @@
     - name: Change ownership and permissions
       shell: |
         chown {{ uid }}:{{ gid }} -R /{{ dataset.name }}
-        chmod 777 -R /{{ dataset.name }}
       loop: "{{ datasets }}"
       loop_control:
         loop_var: dataset

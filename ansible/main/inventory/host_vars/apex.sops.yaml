@@ -1,6 +1,5 @@
 kind: Secret
-ansible_user: ENC[AES256_GCM,data:/N+qU1U6HQ4=,iv:0VY0Jg2h0PImqxkHXvFLXdufm3hlObYD+vQjiNPSaHQ=,tag:UfVRQuzAHk+iGFkfvHtcAQ==,type:str]
-ansible_become_pass: ENC[AES256_GCM,data:DD3a4Nu69w==,iv:56wZEyjGVhUMRuf0PGhiZM9B7U5DNIgok3FpmvYBPIg=,tag:AoqzURqSt2GYN86mRlIy5A==,type:str]
+ansible_user: ENC[AES256_GCM,data:+UOnmdrtC+E=,iv:4s6sQcNxscgMacfU25LdYi765qcfTnoUL+4/KhUkJ38=,tag:uq7uyIPvDYpTMkYC6gZsmQ==,type:str]
 sops:
     kms: []
     gcp_kms: []
@@ -10,14 +9,14 @@ sops:
         - recipient: age1zqydytfsqv3g789ud2jjhrflk445wcadnz0fccrf82zhwfwcgd4q404rtr
           enc: |
             -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBWcEc1RGxkNCszaVV6d0dO
-            ZTlybGFGUDlCRHNqUVNOaHllRVduRXBTTkhBCmZCMWx1UG5VRmpVNkQrSXk0RHdz
-            QjVKTzZIU0lvaFpueVhqS3FxWWNXQWMKLS0tIEcxdGhBS21saXIvKzBmemFwOS9Q
-            anhZNENIMGRrU3RjMkIrdXY5Z29KNXMKjeZZ19Ht8Xf5stI1kXLXA8Wy2wuZ7HK5
-            vBfucToNGH9mp5fofpSpp3Za9fiBx+kbdqWVv2iu+8ch94q4fb9+Ug==
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA3K3N0N0diV0pEMHdwZ0tn
+            T3hzZCtqQ1h3RWhZMy9iOFpKbXRUNnE4eXlBCkVtYkplQ0drUTh2WUFmVEpldlBl
+            TTdyZzd3ODZ6dTBDc0Zzcnd2NUpSeFkKLS0tIGxWcXY1Tk5Ob3doWTBCNlI2Z1or
+            YnMxUEZuaUE4RWs1QzVkdUpNK1NkcEUKysbn233rKI3L5B0j7r2OK16pteK1lDAP
+            bC2ymK0FyWmi6Nk4yoQqz4jsy1rJxyDAskW53DDISzD/ds9IZ1MCHA==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2024-08-03T14:27:09Z"
-    mac: ENC[AES256_GCM,data:ubar7rPlbbzHKJYctUmeU47AMOtGwgqeF4AywsS44zG5wqPb6lUZnnEIRuUH3mFo9MsCIqZycT9r+Jgmpa6WstFTXc4B2ACLsDkNKDr7XfxSFXG2ftkbzTIWPUPOYEJvwXPKJi1Qk/IbtQ9L6CMvcTcylr8T21tZma2GGUGNkh4=,iv:zyLsv3ne6OuFhTifdeESsrJgdIDFCmA4SxaAbgtlQAU=,tag:ZQCziJUnl/DepU7crdodvw==,type:str]
+    lastmodified: "2024-08-20T22:08:37Z"
+    mac: ENC[AES256_GCM,data:8HYPgA0uzqASGZ+8h4jR6wB/j/heHnysV+2KMlFwb7E5hqLVXWtDh5Du+nI4OgcxO9pYugrkGnHZAqW4A9cm9xzVpyJm9ZxQuk2hyYjvILb6oE4Oz+lL4x6g1amntL5ylF23YQ3QYAngPcS9GJG7ISRbawTNP0e1W45zCyIEPOY=,iv:acr+LeVVNQqcQBuaLByPtnJ7O17vR9lI6ONsyzDUBI0=,tag:Sj1KFOoenpATD9dAtWB7iw==,type:str]
     pgp: []
     unencrypted_regex: ^(kind)$
     version: 3.9.0

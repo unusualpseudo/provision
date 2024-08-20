@@ -12,6 +12,8 @@ apt_install_packages:
   - htop
   - unzip
   - arptables
+  - arping
+  - strace
   - software-properties-common
   - unzip
   - dnsutils

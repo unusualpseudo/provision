@@ -1,10 +1,13 @@
 ---
-pool_name: "nas"
+pool_name: "oasis"
 datasets:
-  - name: "nas/Apps"
-  - name: "nas/Apps/Longhorn"
-  - name: "nas/Apps/Minio"
-  - name: "nas/Apps/Media"
+  - name: "oasis/Apps"
+  - name: "oasis/Apps/Longhorn"
+  - name: "oasis/Apps/Minio"
+  - name: "oasis/Media"
+  - name: "oasis/Media/Movies"
+  - name: "oasis/Media/TvShows"
+  - name: "oasis/Media/Music"
 
 nodes_cidr: "192.168.1.0/24"
 uid: 442
@@ -24,3 +27,4 @@ storage_required_packages_list:
   - ffmpeg
   - gdisk
   - fdisk
+  - libusb-dev

@@ -18,5 +18,3 @@ all:
       hosts:
         apex:
           disk_device_id: "usb-Micron_CT1000X9PROSSD9_2409E8C145DD-0:0"
-        titan:
-          disk_device_id: "usb-WD_Elements_25A1_575834314442384E39444131-0:0"
