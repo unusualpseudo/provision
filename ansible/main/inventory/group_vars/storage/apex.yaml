@@ -1,0 +1,7 @@
+---
+pool_name: "oasis"
+datasets:
+  - name: "oasis/Media"
+  - name: "oasis/Media/Movies"
+  - name: "oasis/Media/TvShows"
+  - name: "oasis/Media/Music"

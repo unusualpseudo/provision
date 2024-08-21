@@ -32,7 +32,7 @@ tasks:
     vars:
       LAYER: '{{index .MATCH 0}}'
     cmds:
-      - ansible-playbook -i {{.ANSIBLE_INVENTORY_DIR}} {{.ANSIBLE_PLAYBOOK_DIR}}/{{.LAYER}}/prepare.yaml
+      - ansible-playbook --ask-become-pass -i {{.ANSIBLE_INVENTORY_DIR}} {{.ANSIBLE_PLAYBOOK_DIR}}/{{.LAYER}}/prepare.yaml
 
   install-*:
     desc: Install infrastructure

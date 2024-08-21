@@ -1,14 +1,4 @@
 ---
-pool_name: "oasis"
-datasets:
-  - name: "oasis/Apps"
-  - name: "oasis/Apps/Longhorn"
-  - name: "oasis/Apps/Minio"
-  - name: "oasis/Media"
-  - name: "oasis/Media/Movies"
-  - name: "oasis/Media/TvShows"
-  - name: "oasis/Media/Music"
-
 nodes_cidr: "192.168.1.0/24"
 uid: 442
 gid: 442
