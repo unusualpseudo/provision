@@ -28,26 +28,30 @@
       failed_when: false
       changed_when: false
 
-    - name: Fail if ZFS pool already exists
-      fail:
-        msg: "The ZFS pool {{ pool_name }} already exists."
-      when: zpool_check.rc == 0
-
   tasks:
-    - name: Create ZFS pool
+    - name: Create ZFS pool (only if it does not exist)
       shell: "zpool create -o ashift=12 -f {{ pool_name }} /dev/disk/by-id/{{ disk_device_id }}"
+      when: zpool_check.rc != 0
 
     - name: Set ZFS property atime
       shell: "zfs set atime=off {{ pool_name }}"
+      when: zpool_check.rc != 0
 
     - name: Set ZFS property compression
       shell: "zfs set compression=lz4 {{ pool_name }}"
+      when: zpool_check.rc != 0
 
-    - name: Create ZFS datasets
+    - name: Get existing datasets
+      shell: "zfs list -H -o name"
+      register: existing_datasets
+      changed_when: false
+
+    - name: Create ZFS datasets (only if they do not exist)
       shell: "zfs create {{ dataset.name }}"
       loop: "{{ datasets }}"
       loop_control:
         loop_var: dataset
+      when: dataset.name not in existing_datasets.stdout_lines
 
     - name: Set NFS share properties for datasets
       shell: "zfs set sharenfs={{ nfs_options }} {{ dataset.name }}"
@@ -70,6 +74,15 @@
     - name: Show ZFS pool status
       debug:
         msg: "{{ zpool_status.stdout }}"
+
+    - name: Get existing datasets
+      shell: "zfs list -H -o name"
+      register: existing_datasets
+      changed_when: false
+
+    - name: Show existing datasets
+      debug:
+        msg: "{{ existing_datasets.stdout }}"
 
     - name: Restart NFS service
       ansible.builtin.systemd:

@@ -1,7 +1,9 @@
 ---
 pool_name: "oasis"
+disk_device_id: "usb-Micron_CT1000X9PROSSD9_2409E8C145DD-0:0"
 datasets:
   - name: "oasis/Media"
   - name: "oasis/Media/Movies"
   - name: "oasis/Media/TvShows"
   - name: "oasis/Media/Music"
+  - name: "oasis/Media/YouTube"

@@ -25,6 +25,7 @@ apt_install_packages:
   - iputils-ping
   - python3-kubernetes
   - python3-yaml
+  - rsync
 
 apt_remove_packages:
   - ufw

@@ -1,0 +1,7 @@
+---
+pool_name: "backups"
+disk_device_id: "usb-WD_Elements_25A1_575834314442384E39444131-0:0"
+datasets:
+  - name: "backups/Apps"
+  - name: "backups/Apps/Minio"
+  - name: "backups/Apps/Postgres"

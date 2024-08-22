@@ -2,8 +2,7 @@
 - name: Reboot all kubernetes nodes
   hosts: all
   become: true
-  gather_facts: true
-  any_errors_fatal: true
+  any_errors_fatal: false
   pre_tasks:
     - name: Pausing for 5 seconds...
       ansible.builtin.pause:

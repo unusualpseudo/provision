@@ -1,5 +1,0 @@
----
-pool_name: "backups"
-datasets:
-  - name: "backups/Apps"
-  - name: "backups/Apps/Minio"
